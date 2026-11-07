@@ -81,4 +81,9 @@ public class ProductoService {
     public List<Producto> consultaSQL(BigDecimal precioInf, BigDecimal precioSup) {
         return productoRepository.consultaSQL(precioInf, precioSup);
     }
+    
+    @Transactional(readOnly = true)
+    public List<Producto> consultaCategoria(Integer idCategoria) {
+        return productoRepository.findByCategoriaIdCategoria(idCategoria);
+    }
 }

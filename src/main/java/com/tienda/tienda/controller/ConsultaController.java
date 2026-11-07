@@ -1,5 +1,6 @@
 package com.tienda.tienda.controller;
 
+import com.tienda.tienda.service.CategoriaService;
 import com.tienda.tienda.service.ProductoService;
 import java.math.BigDecimal;
 import org.springframework.stereotype.Controller;
@@ -14,15 +15,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class ConsultaController {
 
     private final ProductoService productoService;
+    private final CategoriaService categoriaService;
 
-    public ConsultaController(ProductoService productoService) {
+    public ConsultaController(ProductoService productoService, CategoriaService categoriaService) {
         this.productoService = productoService;
+        this.categoriaService = categoriaService;
     }
 
     @GetMapping("/listado")
     public String listado(Model model) {
         var productos = productoService.getProductos(false);
         model.addAttribute("productos", productos);
+        var categorias = categoriaService.getCategorias(false);
+        model.addAttribute("categorias", categorias);
         return "/consultas/listado";
     }
 
@@ -56,6 +61,16 @@ public class ConsultaController {
         model.addAttribute("productos", productos);
         model.addAttribute("precioInf", precioInf);
         model.addAttribute("precioSup", precioSup);
+        return "/consultas/listado";
+    }
+
+    @PostMapping("/consultaCategoria")
+    public String consultaCategoria(@RequestParam() Integer idCategoria, Model model) {
+        var productos = productoService.consultaCategoria(idCategoria);
+        var categorias = categoriaService.getCategorias(false);
+        model.addAttribute("productos", productos);
+        model.addAttribute("idCategoriaActual", idCategoria);
+        model.addAttribute("categorias", categorias);
         return "/consultas/listado";
     }
 }
